@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'flight-planner';
+
+  loginAdmin(): void {
+    localStorage.setItem('admin', JSON.stringify('codelex-admin:Password123'))
+  }
 }

@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { FlightSearchComponent } from './pages/flight-search/flight-search.component';
-import { FlightFormComponent } from './pages/flight-form/flight-form.component';
+import { FlightSearchComponent } from './pages/public/flight-search/flight-search.component';
+import { FlightAddComponent } from './pages/admin/flight-add/flight-add.component';
+import { PublicComponent } from './pages/public/public.component';
+import { AdminComponent } from './pages/admin/admin.component';
+import { FlightFindComponent } from './pages/admin/flight-find/flight-find.component';
+import { PublicGuard } from './shared/guards/public.guard';
+import { AdminGuard } from './shared/guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -10,24 +15,53 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'flights',
+    path: '',
+    component: PublicComponent,
+    canActivate: [PublicGuard],
     children: [
       {
-        path: '',
-        redirectTo: 'search',
-        pathMatch: 'full'
+        path: 'flights',
+        children: [
+          {
+            path: '',
+            redirectTo: 'search',
+            pathMatch: 'full'
+          },
+          {
+            path: 'search',
+            component: FlightSearchComponent
+          },
+        ]
+      }
+    ]
+  },
+  {
+    path: '',
+    component: AdminComponent,
+    canActivate: [AdminGuard],
+    children: [
+      {
+        path: 'admin',
+        pathMatch: 'full',
+        redirectTo: 'flights'
       },
       {
-        path: 'search',
-        component: FlightSearchComponent
-      },
-      {
-        path: 'add',
-        component: FlightFormComponent
-      },
-      {
-        path: 'edit/:id',
-        component: FlightFormComponent
+        path: 'flights',
+        children: [
+          {
+            path: '',
+            redirectTo: 'find',
+            pathMatch: 'full'
+          },
+          {
+            path: 'find',
+            component: FlightFindComponent
+          },
+          {
+            path: 'add',
+            component: FlightAddComponent
+          }
+        ]
       }
     ]
   }

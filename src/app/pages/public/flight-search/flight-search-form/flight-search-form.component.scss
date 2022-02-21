@@ -1,9 +1,3 @@
-.flight-search-form-section {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-}
-
 .flight-search-form-wrapper {
   display: flex;
   justify-content: center;
@@ -11,14 +5,15 @@
 
 .flight-search-form {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  width: 500px;
-  padding: 20px;
+  padding: 20px 20px 0 20px;
   box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
   border-radius: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.flight-search-form-title {
-  text-align: center;
+.btn-search {
+  margin-bottom: 20px;
 }

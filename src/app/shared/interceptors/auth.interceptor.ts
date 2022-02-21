@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpHandler, HttpInterceptor, HttpRequest, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
+import { ErrorService } from '../services/error.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthInterceptor implements HttpInterceptor {
+  constructor(private errorService: ErrorService) {
+  }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const admin = localStorage.getItem('admin');
     const shouldAddAuthData = req.headers.get('Add-Auth-Data') !== null;
@@ -13,16 +17,17 @@ export class AuthInterceptor implements HttpInterceptor {
     if (admin && shouldAddAuthData) {
       const authorizationData = 'Basic ' + btoa(admin);
 
-      const authReq = req.clone({
+      req = req.clone({
         headers: req.headers.delete('Add-Auth-Data'),
-        setHeaders: { Authorization: authorizationData }
+        setHeaders: {Authorization: authorizationData}
       });
-
-      console.log(authReq)
-
-      return next.handle(authReq);
-    } else {
-      return next.handle(req)
     }
+
+    return next.handle(req).pipe(
+      catchError(error => {
+        this.errorService.handleError(error);
+        return throwError(error);
+      })
+    )
   }
 }
